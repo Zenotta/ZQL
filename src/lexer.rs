@@ -93,6 +93,8 @@ impl Lexer {
             }
         }
 
+        // TODO: Abstract this correctly
+
         // Check for heap keyword
         if let Some(heap_keyword) = get_heap_keyword(&input_to_check) {
             return LexToken::HeapKeyword(heap_keyword);
@@ -107,8 +109,6 @@ impl Lexer {
         if Regex::new(r"[0-9]+\.[0-9]+").unwrap().is_match(&input_to_check) {
             return LexToken::Number(input_to_check.parse::<f64>().unwrap());
         }
-
-        // TODO: Check for keyword matches
 
         LexToken::Value(input_to_check)
     }

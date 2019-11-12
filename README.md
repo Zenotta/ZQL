@@ -11,7 +11,7 @@ The Zenotta Query Language is composed of two components: the Heap and the Stack
 - [The ZQL Heap](https://github.com/zenotta/zql#the-zql-heap)
 - [The ZQL Stack](https://github.com/zenotta/zql#the-zql-stack)
 - [Development](https://github.com/zenotta/zql#development)
-- [Licnese](https://github.com/zenotta/zql#license)
+- [License](https://github.com/zenotta/zql#license)
 
 ## The ZQL Heap
 
@@ -28,7 +28,7 @@ complete and looks more like the SQL you may be familiar with. Although the Stac
 
 ZQL is currently under development and always open to contributions! 
 
-### License
+## License
 
 ZQL is licensed under [GNU General Public License v3.0](https://github.com/zenotta/zql/blob/master/LICENSE.txt).
 
