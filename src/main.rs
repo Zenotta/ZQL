@@ -11,5 +11,7 @@ fn main() {
     let mut lex_inst = Lexer::new();
     lex_inst.lex(&script);
 
+    println!("");
     println!("{:?}", lex_inst.tokens);
+    println!("");
 }

@@ -81,7 +81,7 @@ impl Lexer {
                 '*' | '-' | '+' | '/' | '^' | '<' | '>' | '=' => {
                     return LexToken::Op(char_to_check.to_string());
                 },
-                '(' | ')' | '[' | ']' | '{' | '}' | '.' | ';' => {
+                '(' | ')' | '[' | ']' | '{' | '}' | ';' => {
                     return LexToken::Punc(char_to_check);
                 },
                 '0'...'9' => {
@@ -125,7 +125,7 @@ impl Lexer {
 
         for c in script_chars {
             match c {
-                '(' | ')' | '[' | ']' | '{' | '}' | '.' | ';' => {
+                '(' | ')' | '[' | ']' | '{' | '}' | ';' => {
                     script_with_breaks.push(' ');
                     script_with_breaks.push(c);
                     script_with_breaks.push(' ');

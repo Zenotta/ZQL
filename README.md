@@ -1,3 +1,5 @@
+![ZQL Logo](https://github.com/zenotta/zql/blob/master/assets/logo.png "ZQL Logo")
+
 # The Zenotta Query Language (ZQL)
 
 ZQL is a dynamically typed, declarative language that runs Smart Data expressions, currently only on the Zenotta platform. The vision for ZQL is that the language will run on any blockchain system and with any Turing complete language, but we'll need your help to get 
