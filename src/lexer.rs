@@ -126,9 +126,7 @@ impl Lexer {
         for c in script_chars {
             match c {
                 '(' | ')' | '[' | ']' | '{' | '}' | ';' => {
-                    script_with_breaks.push(' ');
-                    script_with_breaks.push(c);
-                    script_with_breaks.push(' ');
+                    script_with_breaks.append(&mut vec![' ', c, ' ']);
                 },
                 _ => {
                     script_with_breaks.push(c);
