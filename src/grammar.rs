@@ -1,9 +1,10 @@
 /// Definitions of grammar items
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum GrammarAtom {
     Expression,
     Number(f64),
     Value(String),
+    Punc(char),
     HeapExpression,
     StackExpression,
     StackKeyword(StackKeyword),
@@ -11,7 +12,7 @@ pub enum GrammarAtom {
 }
 
 /// Definitions of operation types
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OpAtom {
     Multiply,
     Add,
@@ -25,7 +26,7 @@ pub enum OpAtom {
 }
 
 /// Definitions of stack keywords
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum StackKeyword {
     New,
     Znt,
@@ -41,14 +42,16 @@ pub enum StackKeyword {
 }
 
 /// Definitions of heap keywords
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HeapKeyword {
     If,
     Else,
     When,
     While,
     For,
-    In
+    In,
+    Stack,
+    Set
 }
 
 /// Get the heap keyword enum for the provided keyword.
@@ -65,6 +68,8 @@ pub fn get_heap_keyword(keyword: &str) -> Option<HeapKeyword> {
         "while" =>  { Some(HeapKeyword::While) }
         "for" =>    { Some(HeapKeyword::For) }
         "in" =>     { Some(HeapKeyword::In) }
+        "stack" =>  { Some(HeapKeyword::Stack) }
+        "set" =>    { Some(HeapKeyword::Set) }
         _ =>        { None }
     }
 }

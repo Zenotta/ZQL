@@ -1,113 +1,238 @@
-use crate::lexer::{ Lexer, LexToken };
-use crate::grammar::GrammarAtom;
+#![allow(dead_code)]
+
+use crate::grammar::{GrammarAtom, HeapKeyword, StackKeyword};
+use crate::lexer::{LexToken, Lexer};
 
 /// A representation of a token node in a syntax tree
 #[derive(Debug, Clone)]
-struct ParseNode {
+pub struct ParseNode {
     pub entry: GrammarAtom,
-    pub children: Vec<ParseNode>
+    pub children: Vec<ParseNode>,
 }
 
 /// A builder for parsing lexed language
 #[derive(Debug, Clone)]
 pub struct Parser;
 
-
 impl ParseNode {
     /// Creates a new node for parsing
     pub fn new() -> ParseNode {
         ParseNode {
             entry: GrammarAtom::Value(String::from("")),
-            children: Vec::new()
+            children: Vec::new(),
         }
     }
 }
 
 impl Parser {
     /// Parses a full script
-    /// 
+    ///
     /// ### Arguments
-    /// 
+    ///
     /// * `input`   - The input script to parse
-    pub fn parse_script(&self, input: &String) {
+    pub fn parse_script(&self, input: &String) -> Result<(ParseNode), String> {
         let mut lex_inst = Lexer::new();
         lex_inst.lex(input);
 
         let tokens = lex_inst.tokens;
-        // self.parse_expression(&tokens, 0).and_then(|(n, i)| if i == tokens.len() {
-        //     Ok(n)
-        // } else {
-        //     Err(format!("Expected end of input, found {:?} at {}", tokens[i], i))
-        // })
+        let token_len = tokens.len();
+
+        let mut position = 0;
+        let mut syntax_tree = ParseNode::new();
+        syntax_tree.entry = GrammarAtom::HeapExpression;
+
+        while position < token_len {
+            let c: &LexToken = tokens
+                .get(position)
+                .ok_or(
+                    String::from("Tried to access a lexical token, but the index requested doesn't exist in the list")
+                )?;
+
+            match c {
+                LexToken::HeapKeyword(k) => {
+                    let (node, next_position) = if k == &HeapKeyword::Stack {
+                        self.parse_stack_expression(&tokens, position + 1)?
+                    } else {
+                        self.parse_heap_expression(&tokens, position + 1)?
+                    };
+
+                    syntax_tree.children.push(node);
+                    position = next_position;
+                }
+                LexToken::StackKeyword(_k) => {
+                    return Err(format!(
+                        "The command or value '{:?}' is a Stack keyword and needs to be declared in a Stack",
+                        { c }
+                    ));
+                }
+                _ => {
+                    return Err(format!(
+                        "The command or value '{:?}' at position {} is syntactically invalid",
+                        { c },
+                        position
+                    ));
+                }
+            }
+        }
+
+        Ok(syntax_tree)
     }
 
-    /// Parses a heap expression
-    /// 
+    /// Generic parse method for expressions
+    ///
     /// ### Arguments
-    /// 
-    /// * `tokens`      - Tokens of the expression to parse
-    /// * `position`    - Index position to parse
-    fn parse_heap_expression(&self, tokens: &Vec<LexToken>, position: usize) -> Result<(ParseNode, usize), String> {
-        let c: &LexToken = tokens.get(position).unwrap();
+    ///
+    ///
+    ///
+    fn parse_expression(
+        &self,
+        tokens: &Vec<LexToken>,
+        position: usize,
+    ) -> Result<(ParseNode, usize), String> {
+        let mut node = ParseNode::new();
+        let c: &LexToken = tokens.get(position).ok_or(String::from(
+            "Tried to access a lexical token, but the index requested doesn't exist in the list",
+        ))?;
 
         match c {
             LexToken::Number(n) => {
-                let mut node = ParseNode::new();
                 node.entry = GrammarAtom::Number(n.clone());
-                Ok((node, position + 1))
-            }
-            LexToken::HeapKeyword(k) => {
-                let mut node = ParseNode::new();
-                node.entry = GrammarAtom::HeapKeyword(k.clone());
-                Ok((node, position + 1))
             }
             LexToken::StackKeyword(k) => {
-                let mut node = ParseNode::new();
                 node.entry = GrammarAtom::StackKeyword(k.clone());
-                Ok((node, position + 1))
             }
             LexToken::Value(v) => {
-                let mut node = ParseNode::new();
                 node.entry = GrammarAtom::Value(v.clone());
-                Ok((node, position + 1))
             }
-            LexToken::Punc(p) => {
-                match p {
-                    '(' | '[' | '{' => {
-                        let mut paren = ParseNode::new();
-                        Ok((paren, position + 1))
-                    }
-                    _ => Err(format!("Expected paren at {} but found {:?}", position, p)),
-                }
+            LexToken::HeapKeyword(k) => {
+                node.entry = GrammarAtom::HeapKeyword(k.clone());
             }
             _ => {
-                Err(format!("Unexpected token {:?}, expected paren or number", {
-                    c
-                }))
+                return Err(format!(
+                    "The command or value '{:?}' is not valid in ZQL",
+                    { c }
+                ));
             }
-        }
+        };
+
+        Ok((node, position + 1))
     }
 
-    /// Parses an expression
-    /// 
+    /// Parses a heap expression
+    ///
     /// ### Arguments
-    /// 
+    ///
+    /// * `tokens`              - Tokens of the expression to parse
+    /// * `position`            - Index position to parse
+    /// * `start_expression`    - Whether this is a new expression or not
+    fn parse_heap_expression(
+        &self,
+        tokens: &Vec<LexToken>,
+        position: usize,
+    ) -> Result<(ParseNode, usize), String> {
+        let mut heap_expression = ParseNode::new();
+        let mut mut_position = position;
+        let mut expression_complete = false;
+
+        heap_expression.entry = GrammarAtom::HeapExpression;
+
+        while !expression_complete {
+            let c: &LexToken = tokens.get(mut_position).ok_or(String::from(
+                "Tried to access a lexical token, but the index requested doesn't exist in the list",
+            ))?;
+
+            match c {
+                LexToken::StackKeyword(k) => {
+                    return Err(format!(
+                        "INVALID: The command or value '{:?}' at position {} is a Stack keyword, but used in a ZQL Heap",
+                        { k },
+                        mut_position
+                    ));
+                }
+                LexToken::Punc(p) => {
+                    let mut node = ParseNode::new();
+                    node.entry = GrammarAtom::Punc(*p);
+                    heap_expression.children.push(node);
+                    mut_position += 1;
+
+                    // TODO: Handle bracket punctuation
+
+                    if p == &';' {
+                        expression_complete = true;
+                    }
+                }
+                _ => {
+                    let (node, next_position) = self.parse_expression(tokens, mut_position)?;
+                    heap_expression.children.push(node);
+                    mut_position = next_position;
+                }
+            };
+        }
+
+        Ok((heap_expression, mut_position))
+    }
+
+    /// Parses a stack expression
+    ///
+    /// ### Arguments
+    ///
     /// * `tokens`      - Tokens of the expression to parse
     /// * `position`    - Index position
-    fn parse_expression(&self, tokens: &Vec<LexToken>, position: usize) {
-        //let (node_term, next_pos) = try!(self.parse_term(tokens, position));
-        let c = tokens.get(position); // should be next_pos
+    /// * `start_expression`    - Whether this is a new expression or not
+    fn parse_stack_expression(
+        &self,
+        tokens: &Vec<LexToken>,
+        position: usize,
+    ) -> Result<(ParseNode, usize), String> {
+        let mut stack_expression = ParseNode::new();
+        let mut mut_position = position;
+        let mut expression_complete = false;
 
-        match c {
-            Some( LexToken::Op(';') ) => {
-                let mut sum = ParseNode::new();
-                sum.entry = GrammarAtom::HeapExpression;
+        stack_expression.entry = GrammarAtom::StackExpression;
 
-            }
-            _ => {
-                // we have just the summand production, nothing more.
-                //Ok((node_term, next_pos))
-            }
+        while !expression_complete {
+            let c: &LexToken = tokens.get(mut_position).ok_or(String::from(
+                "Tried to access a lexical token, but the index requested doesn't exist in the list",
+            ))?;
+
+            match c {
+                LexToken::HeapKeyword(k) => {
+                    return Err(format!(
+                        "INVALID: The command or value '{:?}' at position {} is a Heap keyword, but used in a ZQL Stack",
+                        { k },
+                        mut_position
+                    ));
+                }
+                LexToken::Punc(p) => {
+                    match p {
+                        '[' | ']' => {
+                            let mut node = ParseNode::new();
+                            node.entry = GrammarAtom::Punc(*p);
+                            stack_expression.children.push(node);
+                            mut_position += 1;
+
+                            // Stack expression is considered complete
+                            if p == &']' {
+                                expression_complete = true;
+                            }
+                        }
+                        _ => {
+                            return Err(format!(
+                                "INVALID: Only '[' and ']' are valid in a Stack. The syntax '{:?}' at position {} is invalid",
+                                { p },
+                                mut_position
+                            ));
+                        }
+                    }
+                }
+                _ => {
+                    let (node, next_position) = self.parse_expression(tokens, mut_position)?;
+                    stack_expression.children.push(node);
+                    mut_position = next_position;
+                }
+            };
         }
+
+        Ok((stack_expression, mut_position))
     }
 }
