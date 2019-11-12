@@ -46,7 +46,11 @@ pub enum HeapKeyword {
 }
 
 /// Get the heap keyword enum for the provided keyword.
-/// Rust does not support string-based enums like C, requiring this workaround
+/// Rust does not support string-based enums like C, requiring this workaround.
+///
+/// ### Arguments
+/// 
+/// * `keyword` - The keyword to convert to enum format
 pub fn get_heap_keyword(keyword: &str) -> Option<HeapKeyword> {
     match keyword {
         "if" =>     { Some(HeapKeyword::If) }
@@ -60,7 +64,11 @@ pub fn get_heap_keyword(keyword: &str) -> Option<HeapKeyword> {
 }
 
 /// Get the stack keyword enum for the provided keyword.
-/// Rust does not support string-based enums like C, requiring this workaround
+/// Rust does not support string-based enums like C, requiring this workaround.Lexer
+/// 
+/// ### Arguments
+/// 
+/// * `keyword` - The keyword to convert to enum format
 pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
     match keyword {
         "NEW" =>      { Some(StackKeyword::New) }

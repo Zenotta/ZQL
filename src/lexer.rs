@@ -1,6 +1,7 @@
 use regex::Regex;
 use crate::grammar::{ HeapKeyword, StackKeyword, get_heap_keyword, get_stack_keyword };
 
+/// A data structure for the types of lexical tokens
 #[derive(Debug, Clone)]
 pub enum LexToken {
     Punc(char),
@@ -11,6 +12,7 @@ pub enum LexToken {
     StackKeyword(StackKeyword)
 }
 
+/// A builder for lexical token representations
 #[derive(Debug, Clone)]
 pub struct Lexer {
     pub tokens: Vec<LexToken>
@@ -26,6 +28,10 @@ impl Lexer {
     }
 
     /// Lex input string into a vector of lexical tokens
+    /// 
+    /// ### Arguments
+    /// 
+    /// * `input`   - The input script to lex
     pub fn lex(&mut self, input: &String) {
         let input_with_breaks = self.insert_breaks(input);
         let input_vec = input_with_breaks.chars().collect::<Vec<char>>();
@@ -60,6 +66,10 @@ impl Lexer {
     }
 
     /// Parse a single token in vector format to return a lexed output
+    /// 
+    /// ### Arguments
+    /// 
+    /// * `input`   - The set of characters representing a single token
     fn lex_token(&self, input: &Vec<char>) -> LexToken {
         let input_to_check: String = input.iter().collect();
 
@@ -103,7 +113,12 @@ impl Lexer {
         LexToken::Value(input_to_check)
     }
 
-    /// Inserts breaks in parentheses and other punctuation
+    /// Inserts breaks in parentheses and other punctuation. This is needed 
+    /// to parse punctuation separately from script content.
+    /// 
+    /// ### Arguments
+    /// 
+    /// * `script`  - The script to insert breaks into
     fn insert_breaks(&self, script: &String) -> String {
         let script_chars = script.chars().collect::<Vec<char>>();
         let mut script_with_breaks = Vec::new();
