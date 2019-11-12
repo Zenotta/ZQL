@@ -3,6 +3,7 @@ extern crate regex;
 
 mod lexer;
 mod grammar;
+mod syntax;
 
 use crate::lexer::Lexer;
 

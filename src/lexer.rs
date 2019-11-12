@@ -5,7 +5,7 @@ use crate::grammar::{ HeapKeyword, StackKeyword, get_heap_keyword, get_stack_key
 #[derive(Debug, Clone)]
 pub enum LexToken {
     Punc(char),
-    Op(String),
+    Op(char),
     Number(f64),
     Value(String),
     HeapKeyword(HeapKeyword),
@@ -79,7 +79,7 @@ impl Lexer {
 
             match char_to_check {
                 '*' | '-' | '+' | '/' | '^' | '<' | '>' | '=' => {
-                    return LexToken::Op(char_to_check.to_string());
+                    return LexToken::Op(char_to_check);
                 },
                 '(' | ')' | '[' | ']' | '{' | '}' | ';' => {
                     return LexToken::Punc(char_to_check);

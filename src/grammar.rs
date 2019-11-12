@@ -1,14 +1,18 @@
+/// Definitions of grammar items
 #[derive(Debug, Clone)]
-enum GrammarAtom {
-    ValueAtom,
+pub enum GrammarAtom {
     Expression,
-    Operator(OpAtom),
-    StackAtom(StackKeyword),
-    HeapAtom(HeapKeyword)
+    Number(f64),
+    Value(String),
+    HeapExpression,
+    StackExpression,
+    StackKeyword(StackKeyword),
+    HeapKeyword(HeapKeyword)
 }
 
+/// Definitions of operation types
 #[derive(Debug, Clone)]
-enum OpAtom {
+pub enum OpAtom {
     Multiply,
     Add,
     Subtract,
@@ -20,6 +24,7 @@ enum OpAtom {
     EqualTo
 }
 
+/// Definitions of stack keywords
 #[derive(Debug, Clone)]
 pub enum StackKeyword {
     New,
@@ -35,6 +40,7 @@ pub enum StackKeyword {
     Who
 }
 
+/// Definitions of heap keywords
 #[derive(Debug, Clone)]
 pub enum HeapKeyword {
     If,
