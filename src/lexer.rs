@@ -55,11 +55,9 @@ impl Lexer {
             }
         }
 
+        // Assume the remaining atom is a full token
         if !current_atom.is_empty() {
-            let next_token = self.lex_token(&current_atom);
-
-            tokens.push(next_token);
-            current_atom.clear();
+            tokens.push(self.lex_token(&current_atom));
         }
 
         self.tokens = tokens;
