@@ -1,14 +1,10 @@
 #[derive(Debug, Clone)]
 enum GrammarAtom {
-    Atom,
+    ValueAtom,
     Expression,
-    Operator(OpAtom)
-}
-
-#[derive(Debug, Clone)]
-pub enum KeywordAtom {
-    Stack(StackKeyword),
-    Heap(HeapKeyword)
+    Operator(OpAtom),
+    StackAtom(StackKeyword),
+    HeapAtom(HeapKeyword)
 }
 
 #[derive(Debug, Clone)]
@@ -76,7 +72,7 @@ pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
         "CREATE" =>   { Some(StackKeyword::Create) }
         "UPDATE" =>   { Some(StackKeyword::Update) }
         "DELETE" =>   { Some(StackKeyword::Delete) }
-        "TRANSACT" => { Some(StackKeyword::Delete) }
+        "TRANSACT" => { Some(StackKeyword::Transact) }
         "WHO" =>      { Some(StackKeyword::Who) }
         _ =>          { None }
     }

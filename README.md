@@ -16,3 +16,11 @@ of the language can be written in any Turing complete language, including the on
 The ZQL Stack is the set of transaction queries that will be executed on the blockchain. As a set of queries, the Stack is not Turing 
 complete and looks more like the SQL you may be familiar with. Although the Stack can only execute transactions on the Zenotta blockchain at present, the vision is to have transactions execute on any blockchain system, including Bitcoin, Litecoin and Ripple.
 
+## Development
+
+ZQL is currently under development and always open to contributions! 
+
+### License
+
+ZQL is licensed under [GNU General Public License v3.0](https://github.com/zenotta/zql/blob/master/LICENSE.txt).
+
