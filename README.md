@@ -30,5 +30,5 @@ ZQL is currently under development and always open to contributions!
 
 ## License
 
-ZQL is licensed under [GNU General Public License v3.0](https://github.com/zenotta/zql/blob/master/LICENSE.txt).
+ZQL is licensed under the [MIT License](https://github.com/zenotta/zql/blob/master/LICENSE.txt).
 
