@@ -5,14 +5,18 @@ mod lexer;
 mod grammar;
 mod syntax;
 
-use crate::lexer::Lexer;
+use crate::syntax::Parser;
 
 fn main() {
-    let script = "if (balance > 0) { PAY address 0.6 ZNT }".to_string();
-    let mut lex_inst = Lexer::new();
-    lex_inst.lex(&script);
+    //let script = "if (balance > 0) { PAY address 0.6 ZNT }".to_string();
+    let script = "stack [ PAY address 6 ZNT ]".to_string();
+    let parser = Parser;
+    let parse_result = match parser.parse_script(&script) {
+        Ok(v) => v,
+        Err(e) => panic!("ERROR PARSING: {}", e)
+    };
 
     println!("");
-    println!("{:?}", lex_inst.tokens);
+    println!("{:?}", parse_result);
     println!("");
 }

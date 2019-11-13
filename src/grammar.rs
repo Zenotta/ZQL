@@ -5,6 +5,7 @@ pub enum GrammarAtom {
     Number(f64),
     Value(String),
     Punc(char),
+    Op(char),
     HeapExpression,
     StackExpression,
     StackKeyword(StackKeyword),
