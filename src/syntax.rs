@@ -56,27 +56,22 @@ impl Parser {
                         self.parse_heap_expression(&tokens, position + 1)?
                     };
 
-                    // Manually insert the keyword if we're dealing with a stack
-                    if k == &HeapKeyword::Stack {
-                        let mut heap_keyword = ParseNode::new();
-                        heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
-                        heap_keyword.children.push(node);
-                        syntax_tree.children.push(heap_keyword);
-                    } else {
-                        syntax_tree.children.push(node);
-                    }
+                    let mut heap_keyword = ParseNode::new();
+                    heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
+                    heap_keyword.children.push(node);
+                    syntax_tree.children.push(heap_keyword);
 
                     position = next_position;
                 }
                 LexToken::StackKeyword(_k) => {
                     return Err(format!(
-                        "The command or value '{:?}' is a Stack keyword and needs to be declared in a Stack",
+                        "The command or value {:?} is a Stack keyword and needs to be declared in a Stack",
                         { c }
                     ));
                 }
                 _ => {
                     return Err(format!(
-                        "The command or value '{:?}' at position {} is syntactically invalid",
+                        "The command or value {:?} at position {} is syntactically invalid",
                         { c },
                         position
                     ));
@@ -122,7 +117,7 @@ impl Parser {
             }
             _ => {
                 return Err(format!(
-                    "The command or value '{:?}' is not valid in ZQL",
+                    "The command or value {:?} is not valid in ZQL",
                     { c }
                 ));
             }
@@ -149,14 +144,14 @@ impl Parser {
         heap_expression.entry = GrammarAtom::HeapExpression;
 
         while !expression_complete {
-            let c: &LexToken = tokens.get(mut_position).ok_or(String::from(
-                "Tried to access a lexical token, but the index requested doesn't exist in the list",
+            let c: &LexToken = tokens.get(mut_position).ok_or(format!(
+                "Tried to access a lexical token at position {}, but the index requested doesn't exist in the list", mut_position
             ))?;
 
             match c {
                 LexToken::StackKeyword(k) => {
                     return Err(format!(
-                        "INVALID: The command or value '{:?}' at position {} is a Stack keyword, but is being used in a ZQL Heap",
+                        "INVALID: The command or value {:?} at position {} is a Stack keyword, but is being used in a ZQL Heap",
                         { k },
                         mut_position
                     ));
@@ -164,31 +159,44 @@ impl Parser {
                 LexToken::Punc(p) => {
                     let mut node = ParseNode::new();
                     node.entry = GrammarAtom::Punc(*p);
-                    heap_expression.children.push(node);
-                    mut_position += 1;
 
                     // TODO: Handle bracket punctuation for child expressions
+                    match p {
+                        &'{' => {
+                            mut_position += 1;
+                        }
+                        &'}' | &';' => {
+                            mut_position += 1;
 
-                    if p == &';' {
-                        expression_complete = true;
-                    }
-                }
-                LexToken::HeapKeyword(k) => {
-                    let (node, next_position) = if k == &HeapKeyword::Stack {
-                        self.parse_stack_expression(&tokens, position + 1)?
-                    } else {
-                        self.parse_heap_expression(&tokens, position + 1)?
+                            if p == &';' {
+                                expression_complete = true;
+                            }
+                        }
+                        _ => {
+                            return Err(format!(
+                                "INVALID: The syntax {:?} at position {} is invalid syntax in a Heap",
+                                { p },
+                                mut_position
+                            ));
+                        }
                     };
 
-                    // Manually insert the keyword if we're dealing with a stack
-                    if k == &HeapKeyword::Stack {
-                        let mut heap_keyword = ParseNode::new();
-                        heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
-                        heap_keyword.children.push(node);
-                        heap_expression.children.push(heap_keyword);
+                    heap_expression.children.push(node);
+
+                }
+                LexToken::HeapKeyword(k) => {
+                    println!("K Keyword {:?}", k);
+                    
+                    let (node, next_position) = if k == &HeapKeyword::Stack {
+                        self.parse_stack_expression(&tokens, mut_position + 1)?
                     } else {
-                        heap_expression.children.push(node);
-                    }
+                        self.parse_heap_expression(&tokens, mut_position + 1)?
+                    };
+
+                    let mut heap_keyword = ParseNode::new();
+                    heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
+                    heap_keyword.children.push(node);
+                    heap_expression.children.push(heap_keyword);
 
                     mut_position = next_position;
                 }
@@ -231,7 +239,7 @@ impl Parser {
             match c {
                 LexToken::HeapKeyword(k) => {
                     return Err(format!(
-                        "INVALID: The command or value '{:?}' at position {} is a Heap keyword, but is being used in a ZQL Stack",
+                        "INVALID: The command or value {:?} at position {} is a Heap keyword, but is being used in a ZQL Stack",
                         { k },
                         mut_position
                     ));
@@ -251,7 +259,7 @@ impl Parser {
                         }
                         _ => {
                             return Err(format!(
-                                "INVALID: '[' and ']' are the only valid brackets in a Stack. The syntax '{:?}' at position {} is invalid",
+                                "INVALID: '[' and ']' are the only valid brackets in a Stack. The syntax {:?} at position {} is invalid",
                                 { p },
                                 mut_position
                             ));

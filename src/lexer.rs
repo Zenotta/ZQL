@@ -2,7 +2,7 @@ use regex::Regex;
 use crate::grammar::{ HeapKeyword, StackKeyword, get_heap_keyword, get_stack_keyword };
 
 /// A data structure for the types of lexical tokens
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum LexToken {
     Punc(char),
     Op(char),
