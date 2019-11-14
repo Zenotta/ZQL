@@ -32,6 +32,7 @@ pub enum StackKeyword {
     New,
     Znt,
     Sdl,
+    And,
     Pay,
     Get,
     Where,
@@ -39,7 +40,10 @@ pub enum StackKeyword {
     Update,
     Delete,
     Transact,
-    Who
+    Who,
+    Amount,
+    Encoding,
+    In
 }
 
 /// Definitions of heap keywords
@@ -84,6 +88,7 @@ pub fn get_heap_keyword(keyword: &str) -> Option<HeapKeyword> {
 pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
     match keyword {
         "NEW" =>      { Some(StackKeyword::New) }
+        "AND" =>      { Some(StackKeyword::And) }
         "ZNT" =>      { Some(StackKeyword::Znt) }
         "SDL" =>      { Some(StackKeyword::Sdl) }
         "PAY" =>      { Some(StackKeyword::Pay) }
@@ -94,6 +99,9 @@ pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
         "DELETE" =>   { Some(StackKeyword::Delete) }
         "TRANSACT" => { Some(StackKeyword::Transact) }
         "WHO" =>      { Some(StackKeyword::Who) }
+        "AMOUNT" =>   { Some(StackKeyword::Amount) }
+        "ENCODING" => { Some(StackKeyword::Encoding) }
+        "IN" => { Some(StackKeyword::In) }
         _ =>          { None }
     }
 }

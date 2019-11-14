@@ -126,6 +126,9 @@ impl Lexer {
                 '(' | ')' | '[' | ']' | '{' | '}' | ';' => {
                     script_with_breaks.append(&mut vec![' ', c, ' ']);
                 },
+                '\n' => {
+                    continue;
+                }
                 _ => {
                     script_with_breaks.push(c);
                 }

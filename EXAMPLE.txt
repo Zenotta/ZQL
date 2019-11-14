@@ -1,0 +1,295 @@
+ParseNode { 
+    entry: HeapExpression, 
+    children: [
+        ParseNode { 
+            entry: HeapKeyword(Stack), 
+            children: [
+                ParseNode { 
+                    entry: StackExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("funds"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Op('='), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Number(0.0), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Znt), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(Stack), 
+            children: [
+                ParseNode { 
+                    entry: StackExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("goal"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Op('='), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Number(10000.0), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Znt), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(Set), 
+            children: [
+                ParseNode { 
+                    entry: HeapExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Value("receivers"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Op('='), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(';'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(Stack), 
+            children: [
+                ParseNode { 
+                    entry: StackExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("encoding_scheme"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Op('='), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(New), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Sdl), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(While), 
+            children: [
+                ParseNode { 
+                    entry: HeapExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Value("funds"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Op('<'), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("goal"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc('{'), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receivers.push"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc('('), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receiver.address"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(')'), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("funds"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("+="), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receiver.funding_amount"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc('}'), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(';'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(Stack), 
+            children: [
+                ParseNode { 
+                    entry: StackExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Create), 
+                            children: []
+                        }, 
+                        ParseNode { 
+                            entry: Value("Death_Stranding.ps4"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Where), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Encoding), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("encoding_scheme"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(And), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Amount), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receivers.length"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }
+                    ]
+                }
+            ] 
+        }, 
+        ParseNode { 
+            entry: HeapKeyword(Stack), 
+            children: [
+                ParseNode { 
+                    entry: StackExpression, 
+                    children: [
+                        ParseNode { 
+                            entry: Punc('['), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Transact), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("Death_Stranding.ps4"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Where), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(Who), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receiver"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: StackKeyword(In), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Value("receivers"), 
+                            children: [] 
+                        }, 
+                        ParseNode { 
+                            entry: Punc(']'), 
+                            children: [] 
+                        }
+                    ] 
+                }
+            ] 
+        }
+    ] 
+}

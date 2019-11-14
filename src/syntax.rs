@@ -59,6 +59,11 @@ impl Parser {
                     let mut heap_keyword = ParseNode::new();
                     heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
                     heap_keyword.children.push(node);
+
+                    println!("");
+                    println!("HEAP KEYWORD: {:?}", heap_keyword);
+                    println!("");
+
                     syntax_tree.children.push(heap_keyword);
 
                     position = next_position;
@@ -162,7 +167,7 @@ impl Parser {
 
                     // TODO: Handle bracket punctuation for child expressions
                     match p {
-                        &'{' => {
+                        &'{' | &'[' | &']' | &'(' | &')' => {
                             mut_position += 1;
                         }
                         &'}' | &';' => {
