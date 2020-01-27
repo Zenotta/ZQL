@@ -102,9 +102,12 @@ impl Lexer {
         if let Some(stack_keyword) = get_stack_keyword(&input_to_check) {
             return LexToken::StackKeyword(stack_keyword);
         }
+
+        // TODO: Check for address
         
-        // Check for float value
-        if Regex::new(r"[0-9]+\.[0-9]+").unwrap().is_match(&input_to_check) {
+        // Check for float values and multiple character int values
+        if Regex::new(r"[0-9]+\.[0-9]+").unwrap().is_match(&input_to_check) || 
+           Regex::new(r"^[0-9]+").unwrap().is_match(&input_to_check) {
             return LexToken::Number(input_to_check.parse::<f64>().unwrap());
         }
 

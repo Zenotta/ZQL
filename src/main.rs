@@ -1,4 +1,3 @@
-#[macro_use] extern crate lazy_static;
 extern crate regex;
 
 mod lexer;
@@ -10,27 +9,15 @@ use crate::syntax::Parser;
 fn main() {
     let script = 
     "
-    stack [ funds = 0 ZNT ]
-    stack [ goal = 10000 ZNT ]
-    set receivers = [];
-    
-    stack [ encoding_scheme = NEW SDL ]
+    set coin = 0;
+    set address1 = 'A0f932582395';
+    set address2 = 'B13509813fg1';
 
-    while funds < goal {
-        receivers.push(receiver.address)
-        funds += receiver.funding_amount
-    };
-
-    stack [
-        CREATE Death_Stranding.ps4 WHERE
-        ENCODING encoding_scheme AND
-        AMOUNT receivers.length
-    ]
-
-    stack [ 
-        TRANSACT Death_Stranding.ps4 WHERE
-        WHO receiver IN receivers
-    ]"
+    if coin == 0 {
+        stack [ PAY address1 1 ZNT ]
+    } else {
+        stack [ PAY address2 1 ZNT ]
+    }"
     .to_string();
 
     let parser = Parser;

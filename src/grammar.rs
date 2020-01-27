@@ -43,7 +43,8 @@ pub enum StackKeyword {
     Who,
     Amount,
     Encoding,
-    In
+    In,
+    Address
 }
 
 /// Definitions of heap keywords
@@ -80,7 +81,7 @@ pub fn get_heap_keyword(keyword: &str) -> Option<HeapKeyword> {
 }
 
 /// Get the stack keyword enum for the provided keyword.
-/// Rust does not support string-based enums like C, requiring this workaround.Lexer
+/// Rust does not support string-based enums like C, requiring this workaround.
 /// 
 /// ### Arguments
 /// 
@@ -101,7 +102,7 @@ pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
         "WHO" =>      { Some(StackKeyword::Who) }
         "AMOUNT" =>   { Some(StackKeyword::Amount) }
         "ENCODING" => { Some(StackKeyword::Encoding) }
-        "IN" => { Some(StackKeyword::In) }
+        "IN" =>       { Some(StackKeyword::In) }
         _ =>          { None }
     }
 }

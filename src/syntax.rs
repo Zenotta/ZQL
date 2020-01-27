@@ -60,10 +60,6 @@ impl Parser {
                     heap_keyword.entry = GrammarAtom::HeapKeyword(k.clone());
                     heap_keyword.children.push(node);
 
-                    println!("");
-                    println!("HEAP KEYWORD: {:?}", heap_keyword);
-                    println!("");
-
                     syntax_tree.children.push(heap_keyword);
 
                     position = next_position;
@@ -98,7 +94,6 @@ impl Parser {
         tokens: &Vec<LexToken>,
         position: usize,
     ) -> Result<(ParseNode, usize), String> {
-
         let mut node = ParseNode::new();
         let c: &LexToken = tokens.get(position).ok_or(String::from(
             "Tried to access a lexical token, but the index requested doesn't exist in the list",
@@ -121,10 +116,9 @@ impl Parser {
                 node.entry = GrammarAtom::HeapKeyword(k.clone());
             }
             _ => {
-                return Err(format!(
-                    "The command or value {:?} is not valid in ZQL",
-                    { c }
-                ));
+                return Err(format!("The command or value {:?} is not valid in ZQL", {
+                    c
+                }));
             }
         };
 
@@ -144,13 +138,12 @@ impl Parser {
     ) -> Result<(ParseNode, usize), String> {
         let mut heap_expression = ParseNode::new();
         let mut mut_position = position;
-        let mut expression_complete = false;
 
         heap_expression.entry = GrammarAtom::HeapExpression;
 
-        while !expression_complete {
+        while mut_position < tokens.len() {
             let c: &LexToken = tokens.get(mut_position).ok_or(format!(
-                "Tried to access a lexical token at position {}, but the index requested doesn't exist in the list", mut_position
+                "Tried to access a lexical token at position {} in a HEAP EXPR, but the index requested doesn't exist in the list", mut_position
             ))?;
 
             match c {
@@ -167,14 +160,11 @@ impl Parser {
 
                     // TODO: Handle bracket punctuation for child expressions
                     match p {
-                        &'{' | &'[' | &']' | &'(' | &')' => {
-                            mut_position += 1;
-                        }
-                        &'}' | &';' => {
+                        &'{' | &'}' | &'[' | &']' | &'(' | &')' | &';' => {
                             mut_position += 1;
 
                             if p == &';' {
-                                expression_complete = true;
+                                break;
                             }
                         }
                         _ => {
@@ -187,14 +177,15 @@ impl Parser {
                     };
 
                     heap_expression.children.push(node);
-
                 }
                 LexToken::HeapKeyword(k) => {
-                    println!("K Keyword {:?}", k);
-                    
                     let (node, next_position) = if k == &HeapKeyword::Stack {
                         self.parse_stack_expression(&tokens, mut_position + 1)?
                     } else {
+                        println!("");
+                        println!("HEAP KW: {:?}", c);
+                        println!("");
+
                         self.parse_heap_expression(&tokens, mut_position + 1)?
                     };
 
@@ -218,7 +209,7 @@ impl Parser {
         Ok((heap_expression, mut_position))
     }
 
-    /// Parses a stack expression. Stack expressions cannot nest, so a simple 
+    /// Parses a stack expression. Stack expressions cannot nest, so a simple
     /// check on the closing bracket is enough to conclude the parsing.
     ///
     /// ### Arguments
@@ -238,7 +229,7 @@ impl Parser {
 
         while !expression_complete {
             let c: &LexToken = tokens.get(mut_position).ok_or(String::from(
-                "Tried to access a lexical token, but the index requested doesn't exist in the list",
+                "Tried to access a lexical token in a STACK EXPR, but the index requested doesn't exist in the list",
             ))?;
 
             match c {
@@ -278,6 +269,10 @@ impl Parser {
                 }
             };
         }
+
+        println!("");
+        println!("STACK EXPRESSION: {:?}", stack_expression);
+        println!("");
 
         Ok((stack_expression, mut_position))
     }
