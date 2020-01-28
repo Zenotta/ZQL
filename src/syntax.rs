@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::grammar::{GrammarAtom, HeapKeyword};
+use crate::grammar::{GrammarAtom, HeapKeyword, OpAtom, find_op_grammar_atom};
 use crate::lexer::{LexToken, Lexer};
 
 /// A representation of a token node in a syntax tree
@@ -109,9 +109,6 @@ impl Parser {
             LexToken::Value(v) => {
                 node.entry = GrammarAtom::Value(v.clone());
             }
-            LexToken::Op(o) => {
-                node.entry = GrammarAtom::Op(o.clone());
-            }
             LexToken::HeapKeyword(k) => {
                 node.entry = GrammarAtom::HeapKeyword(k.clone());
             }
@@ -182,10 +179,6 @@ impl Parser {
                     let (node, next_position) = if k == &HeapKeyword::Stack {
                         self.parse_stack_expression(&tokens, mut_position + 1)?
                     } else {
-                        println!("");
-                        println!("HEAP KW: {:?}", c);
-                        println!("");
-
                         self.parse_heap_expression(&tokens, mut_position + 1)?
                     };
 
@@ -195,6 +188,12 @@ impl Parser {
                     heap_expression.children.push(heap_keyword);
 
                     mut_position = next_position;
+                }
+                LexToken::Op(o) => {
+                    let node = find_op_grammar_atom(o);
+                    
+                    mut_position += 1;
+                    heap_expression.children.push(node);
                 }
                 _ => {
                     // Assume anything else can be generically parsed
@@ -261,6 +260,12 @@ impl Parser {
                             ));
                         }
                     }
+                }
+                LexToken::Op(o) => {
+                    let node = find_op_grammar_atom(o);
+                    
+                    mut_position += 1;
+                    stack_expression.children.push(node);
                 }
                 _ => {
                     let (node, next_position) = self.parse_expression(tokens, mut_position)?;

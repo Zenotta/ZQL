@@ -1,11 +1,12 @@
+use crate::syntax::ParseNode;
+
 /// Definitions of grammar items
 #[derive(Debug, Clone, PartialEq)]
 pub enum GrammarAtom {
-    Expression,
     Number(f64),
     Value(String),
     Punc(char),
-    Op(char),
+    Op(OpAtom),
     HeapExpression,
     StackExpression,
     StackKeyword(StackKeyword),
@@ -15,6 +16,7 @@ pub enum GrammarAtom {
 /// Definitions of operation types
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OpAtom {
+    To,
     Multiply,
     Add,
     Subtract,
@@ -105,4 +107,46 @@ pub fn get_stack_keyword(keyword: &str) -> Option<StackKeyword> {
         "IN" =>       { Some(StackKeyword::In) }
         _ =>          { None }
     }
+}
+
+/// Performs a match against an operator to find a 
+/// grammar atom for it. This is a utility function for the parser.
+/// 
+/// ### Arguments
+/// 
+/// * `operator`    - Operator to find a grammar atom for
+pub fn find_op_grammar_atom(operator: &String) -> ParseNode {
+    let mut node = ParseNode::new();
+
+    match operator.as_str() {
+        "*" => {
+            node.entry = GrammarAtom::Op(OpAtom::Multiply);
+        }
+        "+" => {
+            node.entry = GrammarAtom::Op(OpAtom::Add);
+        }
+        "-" => {
+            node.entry = GrammarAtom::Op(OpAtom::Subtract);
+        }
+        "/" => {
+            node.entry = GrammarAtom::Op(OpAtom::Divide);
+        }
+        "<" => {
+            node.entry = GrammarAtom::Op(OpAtom::LessThan);
+        }
+        ">" => {
+            node.entry = GrammarAtom::Op(OpAtom::GreaterThan);
+        }
+        "=" => {
+            node.entry = GrammarAtom::Op(OpAtom::To);
+        }
+        "==" => {
+            node.entry = GrammarAtom::Op(OpAtom::EqualTo);
+        }
+        _ => {
+            panic!("Unknown operator found: {}", operator);
+        }
+    }
+
+    return node;
 }
