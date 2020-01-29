@@ -21,8 +21,6 @@ pub enum OpAtom {
     Add,
     Subtract,
     Divide,
-    Power(i64),
-    Root(i64),
     LessThan,
     GreaterThan,
     EqualTo

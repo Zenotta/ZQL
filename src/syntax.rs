@@ -222,11 +222,10 @@ impl Parser {
     ) -> Result<(ParseNode, usize), String> {
         let mut stack_expression = ParseNode::new();
         let mut mut_position = position;
-        let mut expression_complete = false;
 
         stack_expression.entry = GrammarAtom::StackExpression;
 
-        while !expression_complete {
+        loop {
             let c: &LexToken = tokens.get(mut_position).ok_or(String::from(
                 "Tried to access a lexical token in a STACK EXPR, but the index requested doesn't exist in the list",
             ))?;
@@ -249,7 +248,7 @@ impl Parser {
 
                             // Stack expression is considered complete
                             if p == &']' {
-                                expression_complete = true;
+                                break;
                             }
                         }
                         _ => {
