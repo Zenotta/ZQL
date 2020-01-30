@@ -5,9 +5,10 @@ mod grammar;
 mod syntax;
 mod kernel;
 mod utils;
+mod compiler;
 
 use crate::syntax::Parser;
-use crate::kernel::Kernel;
+use crate::compiler::Compiler;
 
 fn main() {
     let script = 
@@ -33,8 +34,8 @@ fn main() {
     println!("");
 
     // Execute the script
-    let mut kernel_instance = Kernel::new();
-    kernel_instance.parse_heap_expression(&parse_result);
+    let mut compiler_instance = Compiler::new();
+    compiler_instance.parse_heap_expression(&parse_result);
 
-    println!("ASSIGNMENTS: {:?}", kernel_instance.0.assignments);
+    println!("ASSIGNMENTS: {:?}", compiler_instance.0.assignments);
 }
