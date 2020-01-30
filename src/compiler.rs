@@ -11,7 +11,7 @@ pub enum AssignmentValue {
     Address(String)
 }
 
-/// A generic model for execution
+/// A generic model for execution of the script
 #[derive(Debug, Clone)]
 pub struct ExecutionModel {
     pub assignments: HashMap<String, AssignmentValue>
@@ -104,7 +104,8 @@ impl Compiler {
                     }
                 }
 
-                let right_hand_side_value = self.calculate_expression(&full_expression[right_hand_side..]);
+                let calculated_right_hand_side = self.calculate_expression(&full_expression[right_hand_side..]);
+                let right_hand_side_value = AssignmentValue::Number(calculated_right_hand_side);
                 
                 match &full_expression[0].entry {
                     GrammarAtom::Value(key) => {
@@ -145,7 +146,7 @@ impl Compiler {
     /// ### Arguments
     /// 
     /// * `expression`  - Expression to calculate
-    fn calculate_expression(&self, expression: &[ParseNode]) -> AssignmentValue {
+    fn calculate_expression(&self, expression: &[ParseNode]) -> f64 {
         let mut value = 0.0;
         let mut previous_operator: Option<OpAtom> = None;
 
@@ -189,7 +190,7 @@ impl Compiler {
             }
         }
 
-        AssignmentValue::Number(value)
+        value
     }
 
     /// Updates the current value depending on the previous operator
